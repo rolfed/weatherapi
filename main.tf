@@ -1,0 +1,39 @@
+terraform {
+    required_providers {
+        azurerm = {
+            source = "hashicorp/azurerm"
+            version = "2.90.0"
+        }
+    }
+}
+
+provider "azurerm" {
+    features {}
+}
+
+resource "azurerm_resource_group" "tf_test" {
+    name     = "tfmaingp"
+    location = "West US"
+}
+
+resource "azurerm_container_group" "tfcg_test" {
+    location            = azurerm_resource_group.tf_test.location
+    name                = "weatherapi"
+    resource_group_name = azurerm_resource_group.tf_test.name
+
+    ip_address_type = "public"
+    dns_name_label = "rolfeconsulting"
+    os_type = "Linux"
+
+    container {
+        cpu    = "1"
+        image  = "rolfeconsulting/weatherapi"
+        memory = "1"
+        name   = "weatherapi"
+
+        ports {
+            port = 80
+            protocol = "TCP"
+        }
+    }
+}

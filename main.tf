@@ -5,6 +5,12 @@ terraform {
             version = "2.90.0"
         }
     }
+    backend "azurerm" {
+        resource_group_name = "tf_rg_blobstorage"
+        storage_account_name = "tfstoragerolfe"
+        container_name = "tfstatefile"
+        key = "terraform.tfstate"
+    }
 }
 
 provider "azurerm" {

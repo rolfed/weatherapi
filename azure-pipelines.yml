@@ -3,29 +3,54 @@
 # https://docs.microsoft.com/azure/devops/pipelines/languages/docker
 
 trigger:
-- main
+  - main
 
 resources:
-- repo: self
+  - repo: self
 
 variables:
   tag: '$(Build.BuildId)'
 
 stages:
-- stage: Build
-  displayName: Build image
-  jobs:
-  - job: Build
-    displayName: Build
-    pool:
-      vmImage: ubuntu-latest
-    steps:
-    - task: Docker@2
-      inputs:
-        containerRegistry: 'Rolfe Consulting Docker Hub'
-        repository: 'rolfeconsulting/weatherapi'
-        command: 'buildAndPush'
-        Dockerfile: '**/Dockerfile'
-        tags: |
-          $(tag)
+  - stage: Build
+    displayName: Build image
+    jobs:
+      - job: Build
+        displayName: Build
+        pool:
+          vmImage: ubuntu-latest
+        steps:
+          - task: Docker@2
+            inputs:
+              containerRegistry: 'Rolfe Consulting Docker Hub'
+              repository: 'rolfeconsulting/weatherapi'
+              command: 'buildAndPush'
+              Dockerfile: '**/Dockerfile'
+              tags: |
+                $(tag)
+  - stage: Provision
+      displayName: 'Terraforming on Azure...'
+      dependsOn: Build
+      jobs:
+        - job: Provision
+            displayName: 'Provision Container Instance'
+            pool:
+              vmImage: ubuntu-latest
+            variables:
+              - group: terraformWeatherapiEnvVars
+            steps:
+              - script: |
+                  set -e 
+                  
+                  terraform init -input=false
+                  terraform apply -input=false -auto-approve
+                name: 'Run Terraform'
+                displayName: 'Run Terraform'
+                env:
+                  ARM_ClIENT_ID: '$(ARM_ClientId)'
+                  ARM_CLIENT_SECRET: '$(ARM_ClientSecret)'
+                  ARM_TENANT_ID: '$(ARM_TenantId)'
+                  ARM_SUBSCRIPTION_ID: '$(ARM_SubscriptionId)'
+                  
+                  
     

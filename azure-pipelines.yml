@@ -20,14 +20,14 @@ stages:
     pool:
       vmImage: ubuntu-latest
     steps:
-      - task: Docker@2
-        inputs:
-          containerRegistry: 'Rolfe Consulting Docker Hub'
-          repository: 'rolfeconsulting/weatherapi'
-          command: 'buildAndPush'
-          Dockerfile: '**/Dockerfile'
-          tags: |
-            $(tag)
+    - task: Docker@2
+      inputs:
+        containerRegistry: 'Rolfe Consulting Docker Hub'
+        repository: 'rolfeconsulting/weatherapi'
+        command: 'buildAndPush'
+        Dockerfile: '**/Dockerfile'
+        tags: |
+          $(tag)
 - stage: Provision
     displayName: 'Terraforming on Azure...'
     dependsOn: Build
@@ -37,15 +37,15 @@ stages:
         pool:
           vmImage: ubuntu-latest
         variables:
-          - group: terraformWeatherapiEnvVars
+        - group: terraformWeatherapiEnvVars
         steps:
-          - script: |
-              set -e 
-              
-              terraform init -input=false
-              terraform apply -input=false -auto-approve
-            name: 'Run Terraform'
-            displayName: 'Run Terraform'
+        - script: |
+            set -e 
+            
+            terraform init -input=false
+            terraform apply -input=false -auto-approve
+          name: 'Run Terraform'
+          displayName: 'Run Terraform'
             env:
               ARM_ClIENT_ID: '$(ARM_ClientId)'
               ARM_CLIENT_SECRET: '$(ARM_ClientSecret)'

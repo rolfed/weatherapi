@@ -33,24 +33,24 @@ stages:
   dependsOn: Build
   jobs:
   - job: Provision
-      displayName: 'Provision Container Instance'
-      pool:
-        vmImage: ubuntu-latest
-      variables:
-      - group: terraformWeatherapiEnvVars
-      steps:
-      - script: |
-          set -e 
-          
-          terraform init -input=false
-          terraform apply -input=false -auto-approve
-        name: 'Run Terraform'
-        displayName: 'Run Terraform'
-          env:
-            ARM_ClIENT_ID: '$(ARM_ClientId)'
-            ARM_CLIENT_SECRET: '$(ARM_ClientSecret)'
-            ARM_TENANT_ID: '$(ARM_TenantId)'
-            ARM_SUBSCRIPTION_ID: '$(ARM_SubscriptionId)'
+    displayName: 'Provision Container Instance'
+    pool:
+      vmImage: ubuntu-latest
+    variables:
+    - group: terraformWeatherapiEnvVars
+    steps:
+    - script: |
+        set -e 
+        
+        terraform init -input=false
+        terraform apply -input=false -auto-approve
+      name: 'Run Terraform'
+      displayName: 'Run Terraform'
+        env:
+          ARM_ClIENT_ID: '$(ARM_ClientId)'
+          ARM_CLIENT_SECRET: '$(ARM_ClientSecret)'
+          ARM_TENANT_ID: '$(ARM_TenantId)'
+          ARM_SUBSCRIPTION_ID: '$(ARM_SubscriptionId)'
 
 
 

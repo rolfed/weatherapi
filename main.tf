@@ -19,7 +19,7 @@ provider "azurerm" {
 
 variable "imagebuild" {
     description = "Latest image build"
-    type = "string"
+    type = string
 }
 
 resource "azurerm_resource_group" "tf_test" {

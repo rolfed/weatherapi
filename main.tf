@@ -23,13 +23,13 @@ variable "imagebuild" {
 }
 
 resource "azurerm_resource_group" "tf_test" {
-    name     = "tfmaingp"
+    name     = "tfmainrg"
     location = "West US"
 }
 
 resource "azurerm_container_group" "tfcg_test" {
-    location            = azurerm_resource_group.tf_test.location
     name                = "weatherapi"
+    location            = azurerm_resource_group.tf_test.location
     resource_group_name = azurerm_resource_group.tf_test.name
 
     ip_address_type = "public"

@@ -37,10 +37,10 @@ resource "azurerm_container_group" "tfcg_test" {
     os_type = "Linux"
 
     container {
-        cpu    = "1"
-        image  = "rolfeconsulting/weatherapi:${var.imagebuild}"
-        memory = "1"
         name   = "weatherapi"
+        image  = "rolfeconsulting/weatherapi:${var.imagebuild}"
+            cpu    = "1"
+            memory = "1"
 
         ports {
             port = 80
